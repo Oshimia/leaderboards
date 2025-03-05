@@ -6,9 +6,8 @@
 
 /* Global settings */
 body {
-  background-color: #4729b5; /* Change page background */
-  /*can remove the URL if you want to just use a solid color, or use an image saved to the web*/
-  background: url('/background.png') no-repeat center center fixed;
+  /* You can leave the background image empty and just use a solid colour if you prefer */
+  background: #4729b5 url('https://raw.githubusercontent.com/Oshimia/leaderboards/refs/heads/main/background.png') no-repeat center center fixed;
   background-size: cover; /* Ensures the image covers the entire background */
   color: #333333; /* Default text color */
   font-family: Arial, sans-serif; /* Font for the page */
