@@ -150,8 +150,8 @@ function formatDate(date) {
 
 **Purpose:**
 - This script serves as a web endpoint for retrieving data from specified sheets within a Google Spreadsheet.
-- It processes HTTP GET requests by extracting the desired sheets and optional data ranges from URL parameters.
-- The retrieved data is formatted as CSV strings and returned in a JSON response, which enhances human legibility and facilitates downstream processing.
+- It processes HTTP GET requests by reading a query parameter named sheets, which contains one or more sheet requests. Each request can specify just a sheet name (e.g., Sheet1) or a sheet name with a custom range (e.g., Sheet1-A1B2).
+- The script converts the data into a JSON object. Each cell’s content is stored using its cell address (e.g., "A1", "B2") as the key, which makes it easy to look up specific cell values in downstream processing.
 
 **Deployment Context:**
 - The code is intended to be saved in the Google Apps Script associated with your Google Spreadsheet.
@@ -177,16 +177,17 @@ function formatDate(date) {
 
   3. **Data Extraction and Processing:**
      - Data is obtained using `range.getValues()`, which returns a 2D array.
-     - Columns and Rows that are completely empty (all cells are empty or null) are filtered out to reduce noise.
+     - It first scans the first few rows (limited by HEADER_CHECK_LIMIT) to determine which columns are entirely empty—this helps avoid processing columns without any header or content.
+     - It then iterates through each row. If a row is completely empty (i.e., every cell is null or an empty string), it increases a counter and discards it. After a preset number of consecutive empty rows (defined by EMPTY_ROW_LIMIT), the script stops processing further rows.
      - Each remaining row is processed:
        - Empty cells are converted to `""`.
        - Date cells are formatted using `formatDate(date)`.
        - Other cells are converted to strings, and any internal double quotes are escaped by doubling them. The entire cell value is then wrapped in double quotes, ensuring CSV compatibility.
-     - The processed rows are then joined with commas (to form CSV lines) and concatenated with newline characters.
+     - It then generates a cell address (for example, "A1" or "B2") using a helper function (numberToColumnLetter) and stores the cell’s value in a JSON object (sheetData) keyed by this address.
 
   4. **Response Construction:**
-     - The processed CSV data for each sheet or sheet-range request is stored in an object using a unique key (either the sheet name or a combination of sheet name and range).
-     - The final object is serialized into JSON and returned as the HTTP response.
+     - The JSON object for each sheet or sheet-range request (contained in sheetData) is added to a master object (allData) under its unique response key.
+     - Finally, the entire allData object is serialized to JSON and returned as the HTTP response using the ContentService with the MIME type set to JSON.
 
 #### 2. `parseRange(sheet, rangeStr)`
 
@@ -210,7 +211,15 @@ function formatDate(date) {
 - **Operation:**
   - Iterates over each character in the column string, calculates its numeric value using ASCII codes, and accumulates the result to obtain the final column index.
 
-#### 4. `formatDate(date)`
+#### 4. `numberToColumnLetter(n)`
+
+- **Purpose:** 
+  - Converts a numeric index to its corresponding column letter (e.g., 1 to "A", 27 to "AA").
+
+- **Operation**
+  - Converts a numeric index into its corresponding Excel-style column letters using base-26 arithmetic.
+
+#### 5. `formatDate(date)`
 
 - **Purpose:**
   - Formats a JavaScript `Date` object into a string with the format `DD/MMM/YY` (for example, `"03/JUN/23"`), ensuring that it is wrapped in quotes for CSV compatibility.
@@ -227,7 +236,7 @@ function formatDate(date) {
   The `doGet(e)` function is the entry point for HTTP GET requests. It processes the `sheets` parameter to determine which sheet(s) and ranges to retrieve.
 
 - **Data Processing:**  
-  The code retrieves data from the specified range in each sheet, filters out empty rows, and processes each cell to handle empty values, dates, and text (with proper escaping for CSV formatting).
+  This updated script converts selected cell data from a Google Spreadsheet into a JSON object. Each cell’s value is mapped by its cell address (for example, "A1", "B2"), and only non-empty cells (in columns determined to have headers) are included.
 
 - **Response Formation:**  
   The processed data is organized into a JSON object, where each key corresponds to a specific sheet or sheet-range request. This JSON response is then sent back to the requester.
