@@ -1,0 +1,16 @@
+{
+  "name": "fearfromscratch",
+  "version": "1.0.0",
+  "description": "An open source leaderboard builder that uses Google Sheets as a backend and GUI",
+  "main": "functions.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Oshimia",
+  "license": "GPL-3.0-or-later",
+  "type": "module"
+}

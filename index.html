@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Leaderboard UI Replica</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* Basic Reset & Layout */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: sans-serif;
+        margin: 20px;
+      }
+
+      /* Top Navigation Buttons (red, blue, green, etc.) */
+      .top-links {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .top-links a {
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        color: #fff;
+        /* Temporary background colors, replace as needed */
+        background-color: gray;
+        border-radius: 5px;
+      }
+
+      /* Black buttons for different leaderboards */
+      .leaderboard-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .leaderboard-buttons button {
+        padding: 0.5rem 1rem;
+        background-color: #000;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      /* Filter Section */
+      .filter-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        align-items: center;
+      }
+      .filter-section label {
+        font-weight: bold;
+      }
+      .filter-section input[type="text"] {
+        padding: 0.5rem;
+        min-width: 150px;
+      }
+      .filter-section select {
+        padding: 0.5rem;
+      }
+      .filter-section button {
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+      }
+
+      /* Table Styling */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2rem;
+      }
+      thead tr {
+        background-color: #f0f0f0;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 0.5rem;
+        text-align: left;
+      }
+      th {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navigation Links (Red, Blue, Green, etc.) -->
+    <div class="top-links">
+      <!-- Examples, will be replaced with imported external links -->
+      <a href="#" style="background-color: red">H1 Chamber Guide</a>
+      <a href="#" style="background-color: blue">H2 Chamber Guide</a>
+      <a href="#" style="background-color: blue">Fear Clears and Resources</a>
+      <a href="#" style="background-color: green">Compendium</a>
+    </div>
+
+    <!-- Black Buttons for Leaderboard Options -->
+    <div class="leaderboard-buttons">
+      <!-- example buttons -->
+      <button>Warsong</button>
+      <button>Olympic</button>
+      <button>Patch3</button>
+      <button>Patch4</button>
+      <button>Patch2</button>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <label for="filterKeyword"
+        >Filter Data by Keywords separated by a comma:</label
+      >
+      <input type="text" id="filterKeyword" placeholder="Type keyword..." />
+
+      <button id="filterButton">Filter Data</button>
+    </div>
+
+    <!-- Leaderboard Table (dummy data) -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Heat</th>
+            <th>Weapon/Aspect</th>
+            <th>Platform</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dummy Rows -->
+          <tr>
+            <td>Player01</td>
+            <td>10</td>
+            <td>Sword / Aspect A</td>
+            <td>PC</td>
+          </tr>
+          <tr>
+            <td>Player02</td>
+            <td>20</td>
+            <td>Spear / Aspect B</td>
+            <td>Switch</td>
+          </tr>
+          <tr>
+            <td>Player03</td>
+            <td>5</td>
+            <td>Bow / Aspect C</td>
+            <td>PS5</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script type="module">
+      import {
+        fetchButtonConfig,
+        parseSheetData,
+        updateTopLinks,
+        buildButtonStructure,
+        filterLeaderboardData,
+      } from "./functions.js";
+
+      console.log("Script loaded");
+
+      function applyFilter() {
+        const keyword = document.getElementById("filterKeyword").value.trim();
+        filterLeaderboardData(keyword);
+      }
+
+      document
+        .getElementById("filterButton")
+        .addEventListener("click", applyFilter);
+
+      document
+        .getElementById("filterKeyword")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault(); // Prevent default submission behavior if any
+            applyFilter();
+          }
+        });
+
+      fetchButtonConfig()
+        .then((rawData) => {
+          // Parse the sheet JSON into external links and table data.
+          const { externalLinks, tableData } = parseSheetData(rawData);
+          console.log("Parsed external links and table data.");
+
+          // Update the top-links container with the external links.
+          updateTopLinks(externalLinks);
+
+          // Build the dynamic button tree using the table data.
+          buildButtonStructure(tableData);
+        })
+        .catch((error) => {
+          console.error(
+            "Error loading or parsing button configuration:",
+            error
+          );
+        });
+    </script>
+  </body>
+</html>

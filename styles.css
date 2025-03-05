@@ -1,0 +1,89 @@
+.leaderboard-buttons button.selected,
+#child-button-container button.selected {
+  background-color: #382a63; /* Adjust to your desired darker colour */
+  color: white;
+}
+
+/* Global settings */
+body {
+  background-color: #4729b5; /* Change page background */
+  /*can remove the URL if you want to just use a solid color, or use an image saved to the web*/
+  background: url('/background.png') no-repeat center center fixed;
+  background-size: cover; /* Ensures the image covers the entire background */
+  color: #333333; /* Default text color */
+  font-family: Arial, sans-serif; /* Font for the page */
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 0;
+  padding: 0;
+}
+
+/* External Links Section */
+.top-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  background-color: #f0f8ff; /* Light blue background for external links */
+  border-radius: 5px;
+  padding: 1rem;
+}
+
+/* Leaderboard Options & Filter Section (common background) */
+.leaderboard-buttons,
+.filter-section {
+  flex-wrap: wrap;
+  background-color: #f5f5f5; /* Light gray background for both sections */
+  padding: 1rem;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  background-color: #9581d9; /* White background for the table */
+}
+
+.table-container {
+  max-height: 500px; /* Limit the container's height */
+  overflow: auto; /* Enable both vertical and horizontal scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
+  padding: 1rem;  
+  box-sizing: border-box; 
+  width: 100%;
+}
+
+/* Links */
+a {
+  color: #0066cc; /* Link color */
+  text-decoration: none;
+}
+a:hover {
+  color: #004499; /* Link hover color */
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Helvetica Neue", sans-serif;
+  color: #222222;
+}
+
+/* Buttons */
+button {
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+button:hover {
+  background-color: #333333;
+}
