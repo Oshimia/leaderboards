@@ -4,110 +4,13 @@
     <meta charset="UTF-8" />
     <title>Leaderboard UI Replica</title>
     <link rel="stylesheet" href="styles.css" />
-    <style>
-      /* Basic Reset & Layout */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: sans-serif;
-        margin: 20px;
-      }
-
-      /* Top Navigation Buttons (red, blue, green, etc.) */
-      .top-links {
-        display: flex;
-        gap: 1rem;
-        margin-bottom: 1rem;
-      }
-      .top-links a {
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-        color: #fff;
-        /* Temporary background colors, replace as needed */
-        background-color: gray;
-        border-radius: 5px;
-      }
-
-      /* Black buttons for different leaderboards */
-      .leaderboard-buttons {
-        display: flex;
-        gap: 1rem;
-        margin-bottom: 1rem;
-      }
-      .leaderboard-buttons button {
-        padding: 0.5rem 1rem;
-        background-color: #000;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      /* Filter Section */
-      .filter-section {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-bottom: 1rem;
-        align-items: center;
-      }
-      .filter-section label {
-        font-weight: bold;
-      }
-      .filter-section input[type="text"] {
-        padding: 0.5rem;
-        min-width: 150px;
-      }
-      .filter-section select {
-        padding: 0.5rem;
-      }
-      .filter-section button {
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-      }
-
-      /* Table Styling */
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 2rem;
-      }
-      thead tr {
-        background-color: #f0f0f0;
-      }
-      th,
-      td {
-        border: 1px solid #ccc;
-        padding: 0.5rem;
-        text-align: left;
-      }
-      th {
-        font-weight: bold;
-      }
-    </style>
   </head>
   <body>
+    <h1 class="page-title"></h1>
     <!-- Top Navigation Links (Red, Blue, Green, etc.) -->
-    <div class="top-links">
-      <!-- Examples, will be replaced with imported external links -->
-      <a href="#" style="background-color: red">H1 Chamber Guide</a>
-      <a href="#" style="background-color: blue">H2 Chamber Guide</a>
-      <a href="#" style="background-color: blue">Fear Clears and Resources</a>
-      <a href="#" style="background-color: green">Compendium</a>
-    </div>
+    <div class="top-links"></div>
 
-    <!-- Black Buttons for Leaderboard Options -->
-    <div class="leaderboard-buttons">
-      <!-- example buttons -->
-      <button>Warsong</button>
-      <button>Olympic</button>
-      <button>Patch3</button>
-      <button>Patch4</button>
-      <button>Patch2</button>
-    </div>
+    <div class="leaderboard-buttons"></div>
 
     <!-- Filter Section -->
     <div class="filter-section">
@@ -122,35 +25,6 @@
     <!-- Leaderboard Table (dummy data) -->
     <div class="table-container">
       <table>
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Heat</th>
-            <th>Weapon/Aspect</th>
-            <th>Platform</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Dummy Rows -->
-          <tr>
-            <td>Player01</td>
-            <td>10</td>
-            <td>Sword / Aspect A</td>
-            <td>PC</td>
-          </tr>
-          <tr>
-            <td>Player02</td>
-            <td>20</td>
-            <td>Spear / Aspect B</td>
-            <td>Switch</td>
-          </tr>
-          <tr>
-            <td>Player03</td>
-            <td>5</td>
-            <td>Bow / Aspect C</td>
-            <td>PS5</td>
-          </tr>
-        </tbody>
       </table>
     </div>
     <script type="module">
@@ -160,9 +34,17 @@
         updateTopLinks,
         buildButtonStructure,
         filterLeaderboardData,
+        loadLeaderboardData,
+        config,
       } from "./functions.js";
 
       console.log("Script loaded");
+
+      if (config.defaultLeaderboard) {
+        loadLeaderboardData(config.defaultLeaderboard);
+      } else {
+        console.warn("Default leaderboard is undefined.");
+      }
 
       function applyFilter() {
         const keyword = document.getElementById("filterKeyword").value.trim();

@@ -1,8 +1,7 @@
-
-let config = 
-{
-  "baseURL":
+export let config = {
+  baseURL:
     "https://script.google.com/macros/s/AKfycbxSuThURHaBMMi283lvhZcI0Q4gAsKBuAVSWN3bA4_JCrSmBnTAVYE0_yOJMXUTGlgUMg/exec",
+  defaultLeaderboard: "leaderboards-G56K66",
 };
 let originalLeaderboardGrid = [];
 
@@ -34,8 +33,9 @@ export async function fetchButtonConfig() {
 
 /**
  * Parses the full sheet JSON into a grid, then extracts:
- * 1. External links: from row 2 (index 1), skipping column A.
- * 2. Button table data: from row 3 onward (index 2+), also skipping column A.
+ * 1. Page title: from cell B2 (row 2, column B).
+ * 2. External links: from row 3 (index 1), skipping column A.
+ * 3. Button table data: from row 2 onward (index 2+), also skipping column A.
  */
 export function parseSheetData(sheetJson) {
   if (!sheetJson) {
@@ -67,8 +67,11 @@ export function parseSheetData(sheetJson) {
     }
   }
 
-  // External links are on row 2 (index 1) excluding column A.
-  const externalLinksRaw = grid[1].slice(1);
+  // Update the page title with text from cell B2 (row 2, column B).
+  updatePageTitle(grid[1][1]);
+
+  // External links are now on row 3 (index 2) excluding column A.
+  const externalLinksRaw = grid[2].slice(1);
   const externalLinks = externalLinksRaw
     .map((cellValue) => {
       try {
@@ -80,12 +83,18 @@ export function parseSheetData(sheetJson) {
     })
     .filter((linkObj) => linkObj !== null);
 
-  // Button table data is from row 3 onward (index 2+), skipping column A.
-  const tableData = grid.slice(2).map((row) => row.slice(1));
-
+  // Button table data is from row 4 onward (index 3+), skipping column A.
+  const tableData = grid.slice(3).map((row) => row.slice(1));
   console.log("External links:", externalLinks);
   console.log("Button table data:", tableData);
   return { externalLinks, tableData };
+}
+
+export function updatePageTitle(titleText) {
+  const titleElement = document.querySelector("h1.page-title");
+  if (titleElement) {
+    titleElement.textContent = titleText;
+  }
 }
 
 // Converts a column letter (e.g., "A") to a 1-based index (1 for "A", 2 for "B", etc.).
@@ -188,13 +197,13 @@ export function buildButtonStructure(parsedData) {
     // Create a new container for this level.
     const levelContainer = document.createElement("div");
     levelContainer.setAttribute("data-level", level);
-    levelContainer.style.marginTop = "1rem"; // space between levels
     container.appendChild(levelContainer);
 
     buttons.forEach((button) => {
       const btn = document.createElement("button");
       btn.textContent = button.buttonLabel;
       btn.dataset.buttonId = button.buttonID;
+      btn.classList.add("child");
       levelContainer.appendChild(btn);
 
       btn.addEventListener("click", () => {
@@ -227,6 +236,7 @@ export function buildButtonStructure(parsedData) {
     const btn = document.createElement("button");
     btn.textContent = button.buttonLabel;
     btn.dataset.buttonId = button.buttonID;
+    btn.classList.add("root");
     rootContainer.appendChild(btn);
 
     btn.addEventListener("click", () => {
@@ -259,11 +269,11 @@ export function buildButtonStructure(parsedData) {
  *
  * Each external link object should include:
  *  - "label": The text to display on the button.
- *  - "colour": The background color for the button. Accepts any valid CSS color format (e.g., named colors, hex codes, or rgb(...)).
  *  - "link": The URL the button should link to.
  *
  * Optionally, an external link object may include:
  *  - "text": A text color for the button label. If provided, this value will be applied to the link text.
+ *  - "colour": The background color for the button. Accepts any valid CSS color format (e.g., named colors, hex codes, or rgb(...)).
  *
  * If the "text" property is missing, the link's text will use the default styling.
  * Example object: {"label":"test","colour":"yellow","text":"black","link":"https://www.example.com"}
@@ -282,12 +292,17 @@ export function updateTopLinks(links) {
     const a = document.createElement("a");
     a.textContent = linkObj.label;
     a.href = linkObj.link;
-    // Set background color from the 'colour' property
-    a.style.backgroundColor = linkObj.colour;
+
+    // Only set the background color if `colour` is specified
+    if (linkObj.colour) {
+      a.style.backgroundColor = linkObj.colour;
+    }
+
     // Optionally set the text colour if provided
     if (linkObj.text) {
       a.style.color = linkObj.text;
     }
+
     container.appendChild(a);
   });
 }
@@ -314,7 +329,7 @@ export function updateTopLinks(links) {
  *
  * @param {string} dataKey - The string from the button's "Data" column.
  */
-function loadLeaderboardData(dataKey) {
+export function loadLeaderboardData(dataKey) {
   const baseURL = config.baseURL.trim();
   const url = `${baseURL}?sheets=${dataKey}`;
   console.log("Fetching data from:", url);

@@ -13,8 +13,11 @@
 - **Notes:**  
   - Column A and Row 1 are reserved for taking notes.
 
+  - **Page Title:**  
+  - Cell B2 is reserved for the title of the website. 
+
 - **External Links:**  
-  - Row 2 (from Column B onwards) is where you place objects detailing what buttons you want for external links.  
+  - Row 3 (from Column B onwards) is where you place objects detailing what buttons you want for external links.  
   - Example object:
     ```json
     {"label":"H1 Chamber Guide","colour":"rgb(243, 42, 42)","link":"https://zacharywebsites.wixsite.com/chamber-guide-3"}
@@ -24,7 +27,7 @@
     - **colour:** The color of the button. This can be an RGB value, a word, or a hex value (e.g., `#92ed91` for a light green).
     - **link:** The URL the button should link to.
 
-- **Button Table Data (Starting at Row 3):**
+- **Button Table Data (Starting at Row 4):**
   - **Headers:**
     - **Button ID:** A name used to refer to this button in the code.
     - **Parent ID:** If the button has a parent, this is the parent's button ID. If it does not have a parent, use `"ROOT"`.
