@@ -1,6 +1,6 @@
 # Leaderboards
 
-Leaderboards is a website that uses a Google Sheets document as a simple interface and data storage solution to create personalized leaderboards. By using a Google Apps Script extension, your spreadsheet data is exported to your website in a user-friendly format.This is designed so that you don't need any coding knowledge or experience, just follow the instructions and add your information to a Google Sheet to create your own free leaderboard website. 
+Leaderboards is a website that uses a Google Sheets document as a simple interface and data storage solution to create personalized leaderboards. By using a Google Apps Script extension, your spreadsheet data is exported to your website in a user-friendly format.This is designed so that you don't need any coding knowledge or experience, just follow the instructions and add your information to a Google Sheet to create your own free leaderboard website. You can see the working leaderboard here: https://oshimia.github.io/leaderboards/
 
 ## Getting Started
 
